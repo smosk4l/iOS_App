@@ -33,8 +33,10 @@ const App = () => {
     if (board[selectedCards[0]] === board[selectedCards[1]]) {
       setMatchedCards([...matchedCards, ...selectedCards]);
       setSelectedCards([]);
+      setScore((prev) => prev + 1);
     } else {
       const timeoutId = setTimeout(() => setSelectedCards([]), 1000);
+      if (score > 0) setScore((prev) => prev - 1);
       return () => clearTimeout(timeoutId);
     }
   }, [selectedCards]);
@@ -42,7 +44,6 @@ const App = () => {
   const handleTapCard = (index) => {
     if (selectedCards.length >= 2 || selectedCards.includes(index)) return;
     setSelectedCards([...selectedCards, index]);
-    setScore(score + 1);
   };
 
   const didPlayerWin = () => matchedCards.length === board.length;
@@ -73,7 +74,7 @@ const App = () => {
           );
         })}
       </View>
-      {didPlayerWin() || <Button onPress={resetGame} title="Play again" />}
+      {didPlayerWin() && <Button onPress={resetGame} title="Play again" />}
       <StatusBar style="light" />
     </View>
   );
